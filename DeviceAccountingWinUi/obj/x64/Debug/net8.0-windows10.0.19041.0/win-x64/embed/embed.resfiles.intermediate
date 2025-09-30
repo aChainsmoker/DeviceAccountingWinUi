@@ -1,0 +1,10 @@
+App.xbf
+MainWindow.xbf
+Views\DepartmentDevicesView.xbf
+Views\DepartmentRoomsView.xbf
+Views\DepartmentsView.xbf
+Views\DevicesView.xbf
+Views\DeviceTransfersView.xbf
+Views\MainPage.xbf
+Views\WorkerDevicesView.xbf
+Views\WorkersView.xbf

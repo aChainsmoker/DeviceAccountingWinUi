@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page x:ConnectionId='1'
+    x:Class="DeviceAccountingWinUi.Views.DeviceTransfersView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DeviceAccountingWinUi.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" xmlns:vm="using:DeviceAccountingWinUi.ViewModels"
+    mc:Ignorable="d"
+                          >
+
+    <Grid Padding="10">
+        <!-- DataGrid -->
+        <controls:DataGrid x:ConnectionId='2' x:Name="TransferDataGrid"
+                           AutoGenerateColumns="False"
+                           IsReadOnly="True"
+                           ItemsSource="{Binding DeviceTransfers}">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                <controls:DataGridTextColumn Header="Device ID" Binding="{Binding DeviceId}" Width="*"/>
+                <controls:DataGridTextColumn Header="Date of Transfer" Binding="{Binding DateOfTransfer}" Width="*"/>
+                <controls:DataGridTextColumn Header="From Worker ID" Binding="{Binding FromWorkerId}" Width="Auto"/>
+                <controls:DataGridTextColumn Header="To Worker ID" Binding="{Binding ToWorkerId}" Width="Auto"/>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <!-- Кнопка Редактировать -->
+        <Button x:ConnectionId='3' Content="Редактировать"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="10"
+                Width="120"
+                                        
+                Canvas.ZIndex="3"/>
+
+        <!-- Панель редактирования -->
+        <StackPanel x:ConnectionId='4' x:Name="EditPanel"
+                    Visibility="Collapsed"
+                    Background="Transparent"
+                    Padding="10"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="auto"
+                    Spacing="5">
+
+            <!-- Радиокнопки режима -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <RadioButton x:ConnectionId='11' x:Name="AddRadio" Content="Добавление"                            />
+                <RadioButton x:ConnectionId='12' x:Name="EditRadio" Content="Изменение"                            />
+                <RadioButton x:ConnectionId='13' x:Name="DeleteRadio" Content="Удаление"                            />
+            </StackPanel>
+
+            <!-- Поля для данных -->
+            <TextBox x:ConnectionId='5' x:Name="IdBox" Header="ID"/>
+            <TextBox x:ConnectionId='6' x:Name="DeviceIdBox" Header="Device ID"/>
+            <DatePicker x:ConnectionId='7' x:Name="DateOfTransferBox" Header="Date of Transfer"/>
+            <TextBox x:ConnectionId='8' x:Name="FromWorkerIdBox" Header="From Worker ID"/>
+            <TextBox x:ConnectionId='9' x:Name="ToWorkerIdBox" Header="To Worker ID"/>
+
+            <!-- Кнопка Применить -->
+            <Button x:ConnectionId='10' Content="Применить"                        />
+        </StackPanel>
+    </Grid>
+</Page>
+

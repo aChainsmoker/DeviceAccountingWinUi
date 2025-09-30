@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DeviceAccountingWinUi.Views.DevicesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DeviceAccountingWinUi.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vm="using:DeviceAccountingWinUi.ViewModels" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d"
+    KeyDown="Page_KeyDown">
+
+
+
+    <Grid Padding="10">
+        <!-- DataGrid -->
+        <controls:DataGrid x:Name="DeviceDataGrid"
+                           AutoGenerateColumns="False"
+                           IsReadOnly="True"
+                           ItemsSource="{Binding Devices}">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="Inventory ID" Binding="{Binding InventoryId}" Width="*"/>
+                <controls:DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <controls:DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="*"/>
+                <controls:DataGridTextColumn Header="Date of Obtaining" Binding="{Binding DateOfObtaining}" Width="*"/>
+                <controls:DataGridTextColumn Header="Cost" Binding="{Binding Cost}" Width="*"/>
+                <controls:DataGridTextColumn Header="Room Number" Binding="{Binding RoomNumber}" Width="*"/>
+                <controls:DataGridTextColumn Header="Worker ID" Binding="{Binding WorkerId}" Width="*"/>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <!-- Кнопка для редактирования -->
+        <Button Content="Редактировать"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="10"
+                Width="120"
+                Click="EditButton_Click" Canvas.ZIndex="3"/>
+
+        <!-- Панель для редактирования -->
+        <StackPanel x:Name="EditPanel"
+                    Visibility="Collapsed"
+                    Background="Transparent"
+                    Padding="10"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="auto"
+                    Spacing="5">
+
+            <!-- Радиокнопки режима -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <RadioButton x:Name="AddRadio" Content="Добавление" Checked="ModeRadio_Checked"/>
+                <RadioButton x:Name="EditRadio" Content="Изменение" Checked="ModeRadio_Checked"/>
+                <RadioButton x:Name="DeleteRadio" Content="Удаление" Checked="ModeRadio_Checked"/>
+            </StackPanel>
+
+            <!-- Поля для данных -->
+            <TextBox x:Name="InventoryIdBox" Header="Inventory ID"/>
+            <TextBox x:Name="NameBox" Header="Name"/>
+            <TextBox x:Name="ModelBox" Header="Model"/>
+            <DatePicker x:Name="DateOfObtainingBox" Header="Date of Obtaining"/>
+            <TextBox x:Name="CostBox" Header="Cost"/>
+            <TextBox x:Name="RoomNumberBox" Header="Room Number"/>
+            <TextBox x:Name="WorkerIdBox" Header="Worker ID"/>
+
+            <!-- Кнопка применения -->
+            <Button Content="Применить" Click="ApplyEdit_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>

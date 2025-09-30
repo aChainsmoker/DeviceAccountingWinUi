@@ -1,0 +1,39 @@
+<Page
+    x:Class="DeviceAccountingWinUi.Views.DepartmentRoomsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DeviceAccountingWinUi.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:vm="using:DeviceAccountingWinUi.ViewModels"
+    mc:Ignorable="d"
+    KeyDown="Page_KeyDown">
+
+    <Grid Padding="10" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*">
+        <!-- Верхняя информация -->
+        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+            <TextBlock Text="{Binding CompanyName}" FontWeight="Bold" FontSize="24"/>
+            <TextBlock Text="{Binding DepartmentName}" FontWeight="Bold" FontSize="18"/>
+            <TextBlock Text="{Binding CurrentTime}" FontSize="16"/>
+        </StackPanel>
+
+        <!-- Таблица помещений -->
+        <controls:DataGrid x:Name="DepartmentRoomsDataGrid"
+                           Grid.Row="1"
+                           AutoGenerateColumns="False"
+                           IsReadOnly="True"
+                           ItemsSource="{Binding Rooms}">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Header="Room Number" Binding="{Binding Number}" Width="*"/>
+                <controls:DataGridTextColumn Header="Area (sq.m.)" Binding="{Binding Area}" Width="*"/>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <!-- Нижняя панель поиска -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10">
+            <TextBox x:Name="DepartmentIdBox" Header="Department ID" Width="150"/>
+            <Button Content="Найти" Click="SearchButton_Click" VerticalAlignment="Bottom"/>
+        </StackPanel>
+    </Grid>
+</Page>

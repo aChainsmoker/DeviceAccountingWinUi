@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeviceAccountingWinUi (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "DeviceAccountingWinUi (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+﻿using DeviceAccountingWinUi.DatabaseControl;
+using DeviceAccountingWinUi.ViewModels;
+using DeviceAccountingWinUi.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+namespace DeviceAccountingWinUi
+{
+    /// <summary>
+    /// Provides application-specific behavior to supplement the default Application class.
+    /// </summary>
+    public partial class App : Application
+    {
+        private Window? _window;
+        public static IServiceProvider Services { get; private set; } = null!;
+
+        /// <summary>
+        /// Initializes the singleton application object.  This is the first line of authored code
+        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// </summary>
+        public App()
+        {
+            InitializeComponent();
+            ConfigureServices();
+        }
+
+        private void ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            // 📌 Регистрируем DbContext
+            services.AddDbContext<OrganisationContext>();
+            services.AddScoped<DevicesViewModel>();
+            services.AddScoped<WorkersViewModel>();
+            services.AddScoped<DepartmentsViewModel>();
+            services.AddScoped<DeviceTransfersViewModel>();
+            services.AddScoped<DepartmentDevicesViewModel>();
+            services.AddScoped<MainWindowViewModel>();
+            services.AddScoped<DepartmentRoomsViewModel>();
+            services.AddScoped<WorkerDevicesViewModel>();
+
+            Services = services.BuildServiceProvider();
+        } 
+
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        {
+            _window = new MainWindow();
+
+            // Create a Frame to act as the navigation context and navigate to the first page
+            Frame rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            // Navigate to the first page, configuring the new page
+            // by passing required information as a navigation parameter
+            rootFrame.Navigate(typeof(MainPage), args.Arguments);
+
+            // Place the frame in the current Window
+            _window.Content = rootFrame;
+            // Ensure the MainWindow is active
+            _window.Activate();
+        }
+
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+        }
+    }
+}
