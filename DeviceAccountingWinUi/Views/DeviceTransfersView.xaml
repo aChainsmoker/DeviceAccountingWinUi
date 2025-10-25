@@ -5,61 +5,72 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DeviceAccountingWinUi.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" xmlns:vm="using:DeviceAccountingWinUi.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:vm="using:DeviceAccountingWinUi.ViewModels"
+    xmlns:layout="using:DeviceAccountingWinUi.UserControls"
     mc:Ignorable="d"
     KeyDown="Page_KeyDown">
 
-    <Grid Padding="10">
-        <!-- DataGrid -->
-        <controls:DataGrid x:Name="TransferDataGrid"
-                           AutoGenerateColumns="False"
-                           IsReadOnly="True"
-                           ItemsSource="{Binding DeviceTransfers}">
-            <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                <controls:DataGridTextColumn Header="Device ID" Binding="{Binding DeviceId}" Width="*"/>
-                <controls:DataGridTextColumn Header="Date of Transfer" Binding="{Binding DateOfTransfer}" Width="*"/>
-                <controls:DataGridTextColumn Header="From Worker ID" Binding="{Binding FromWorkerId}" Width="Auto"/>
-                <controls:DataGridTextColumn Header="To Worker ID" Binding="{Binding ToWorkerId}" Width="Auto"/>
-            </controls:DataGrid.Columns>
-        </controls:DataGrid>
+    <layout:BasicDataLayout x:Name="MainLayout"
+                           BackButtonClicked="MainLayout_BackButtonClicked">
+        <layout:BasicDataLayout.CenterContent>
+            <!-- DataGrid -->
+            <controls:DataGrid x:Name="TransferDataGrid"
+                               AutoGenerateColumns="False"
+                               IsReadOnly="True"
+                               ItemsSource="{Binding DeviceTransfers}">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                    <controls:DataGridTextColumn Header="Device ID" Binding="{Binding DeviceId}" Width="*"/>
+                    <controls:DataGridTextColumn Header="Date of Transfer" Binding="{Binding DateOfTransfer}" Width="*"/>
+                    <controls:DataGridTextColumn Header="From Worker ID" Binding="{Binding FromWorkerId}" Width="Auto"/>
+                    <controls:DataGridTextColumn Header="To Worker ID" Binding="{Binding ToWorkerId}" Width="Auto"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </layout:BasicDataLayout.CenterContent>
 
-        <!-- Кнопка Редактировать -->
-        <Button Content="Редактировать"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="10"
-                Width="120"
-                Click="EditButton_Click"
-                Canvas.ZIndex="3"/>
+        <layout:BasicDataLayout.RightContent>
+            <!-- Правая колонка: кнопка Редактировать и панель редактирования -->
+            <Grid>
+                <!-- Кнопка Редактировать -->
+                <Button Content="Редактировать"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="10"
+                        Width="120"
+                        Click="EditButton_Click"
+                        Canvas.ZIndex="3"/>
 
-        <!-- Панель редактирования -->
-        <StackPanel x:Name="EditPanel"
-                    Visibility="Collapsed"
-                    Background="Transparent"
-                    Padding="10"
-                    Margin="0,0,0,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Width="auto"
-                    Spacing="5">
+                <!-- Панель редактирования -->
+                <StackPanel x:Name="EditPanel"
+                            Visibility="Collapsed"
+                            Background="Transparent"
+                            Padding="10"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Width="auto"
+                            Spacing="5">
 
-            <!-- Радиокнопки режима -->
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <RadioButton x:Name="AddRadio" Content="Добавление" Checked="ModeRadio_Checked"/>
-                <RadioButton x:Name="EditRadio" Content="Изменение" Checked="ModeRadio_Checked"/>
-                <RadioButton x:Name="DeleteRadio" Content="Удаление" Checked="ModeRadio_Checked"/>
-            </StackPanel>
+                    <!-- Радиокнопки режима -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <RadioButton x:Name="AddRadio" Content="Добавление" Checked="ModeRadio_Checked"/>
+                        <RadioButton x:Name="EditRadio" Content="Изменение" Checked="ModeRadio_Checked"/>
+                        <RadioButton x:Name="DeleteRadio" Content="Удаление" Checked="ModeRadio_Checked"/>
+                    </StackPanel>
 
-            <!-- Поля для данных -->
-            <TextBox x:Name="IdBox" Header="ID"/>
-            <TextBox x:Name="DeviceIdBox" Header="Device ID"/>
-            <DatePicker x:Name="DateOfTransferBox" Header="Date of Transfer"/>
-            <TextBox x:Name="FromWorkerIdBox" Header="From Worker ID"/>
-            <TextBox x:Name="ToWorkerIdBox" Header="To Worker ID"/>
+                    <!-- Поля для данных -->
+                    <TextBox x:Name="IdBox" Header="ID"/>
+                    <TextBox x:Name="DeviceIdBox" Header="Device ID"/>
+                    <DatePicker x:Name="DateOfTransferBox" Header="Date of Transfer"/>
+                    <TextBox x:Name="FromWorkerIdBox" Header="From Worker ID"/>
+                    <TextBox x:Name="ToWorkerIdBox" Header="To Worker ID"/>
 
-            <!-- Кнопка Применить -->
-            <Button Content="Применить" Click="ApplyEdit_Click"/>
-        </StackPanel>
-    </Grid>
+                    <!-- Кнопка Применить -->
+                    <Button Content="Применить" Click="ApplyEdit_Click"/>
+                </StackPanel>
+            </Grid>
+        </layout:BasicDataLayout.RightContent>
+    </layout:BasicDataLayout>
 </Page>

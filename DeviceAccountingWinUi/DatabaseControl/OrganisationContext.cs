@@ -29,6 +29,7 @@ public partial class OrganisationContext : DbContext
     public virtual DbSet<Worker> Workers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("User ID=postgres;Password=pk1Gwb98;Host=localhost;Port=5432;Database=organisation;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,18 +64,11 @@ public partial class OrganisationContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-            entity.Property(e => e.RoomNumber)
-                .HasMaxLength(50)
-                .HasColumnName("room_number");
             entity.Property(e => e.WorkerId).HasColumnName("worker_id");
-
-            entity.HasOne(d => d.RoomNumberNavigation).WithMany(p => p.Devices)
-                .HasForeignKey(d => d.RoomNumber)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Devices_room_number_fkey");
 
             entity.HasOne(d => d.Worker).WithMany(p => p.Devices)
                 .HasForeignKey(d => d.WorkerId)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("Devices_worker_id_fkey");
         });
 
@@ -138,19 +132,23 @@ public partial class OrganisationContext : DbContext
             entity.HasKey(e => e.Id).HasName("Workers_pkey");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DepartmentId).HasColumnName("department_id");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
-
-            entity.HasOne(d => d.Department).WithMany(p => p.Workers)
-                .HasForeignKey(d => d.DepartmentId)
-                .HasConstraintName("Workers_department_id_fkey");
+            entity.Property(e => e.RoomNumber)
+                .HasMaxLength(50)
+                .HasColumnName("room_number");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Workers)
                 .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Workers_role_id_fkey");
+
+            entity.HasOne(d => d.RoomNumberNavigation).WithMany(p => p.Workers)
+                .HasForeignKey(d => d.RoomNumber)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("Workers_room_number_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

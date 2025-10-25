@@ -5,12 +5,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 
-
 namespace DeviceAccountingWinUi.Views;
 
 public sealed partial class DepartmentsView : Page
 {
     private readonly DepartmentsViewModel _viewModel = App.Services.GetRequiredService<DepartmentsViewModel>();
+
     public DepartmentsView()
     {
         InitializeComponent();
@@ -57,7 +57,6 @@ public sealed partial class DepartmentsView : Page
         }
     }
 
-
     private async void ApplyEdit_Click(object sender, RoutedEventArgs e)
     {
         if (_viewModel == null) return;
@@ -103,4 +102,10 @@ public sealed partial class DepartmentsView : Page
         ShortNameBox.Text = "";
     }
 
+    // Обработчик события кнопки "Назад" из BasicDataLayout
+    private void MainLayout_BackButtonClicked(object sender, EventArgs e)
+    {
+        if (Frame.CanGoBack)
+            Frame.GoBack();
+    }
 }

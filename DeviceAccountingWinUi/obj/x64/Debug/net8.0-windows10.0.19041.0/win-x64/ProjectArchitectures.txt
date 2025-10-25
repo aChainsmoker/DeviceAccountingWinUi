@@ -1,1 +1,0 @@
-D:\Docs\Uni files\ПБЗ\Lab2\DeviceAccountingWinUi\DeviceAccountingWinUi\DeviceAccountingWinUi.csproj;x64

@@ -46,7 +46,7 @@ namespace DeviceAccountingWinUi.ViewModels
             {
                 existing.Name = worker.Name;
                 existing.RoleId = worker.RoleId;
-                existing.DepartmentId = worker.DepartmentId;
+                existing.RoomNumber = worker.RoomNumber;
                 await _context.SaveChangesAsync();
                 LoadWorkersAsync();
             }

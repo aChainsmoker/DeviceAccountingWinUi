@@ -9,11 +9,9 @@ public partial class Worker
 
     public string Name { get; set; } = null!;
 
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
 
-    public int? DepartmentId { get; set; }
-
-    public virtual Department? Department { get; set; }
+    public string RoomNumber { get; set; } = null!;
 
     public virtual ICollection<DeviceTransfer> DeviceTransferFromWorkers { get; set; } = new List<DeviceTransfer>();
 
@@ -21,5 +19,7 @@ public partial class Worker
 
     public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
 
-    public virtual Role? Role { get; set; }
+    public virtual Role Role { get; set; } = null!;
+
+    public virtual Room RoomNumberNavigation { get; set; } = null!;
 }

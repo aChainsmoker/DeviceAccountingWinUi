@@ -7,23 +7,14 @@ using System;
 
 namespace DeviceAccountingWinUi.Views;
 
-
 public sealed partial class WorkersView : Page
 {
     private readonly WorkersViewModel _viewModel = App.Services.GetRequiredService<WorkersViewModel>();
+
     public WorkersView()
     {
         InitializeComponent();
         this.DataContext = _viewModel;
-    }
-
-    private void Page_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
-    {
-        if(e.Key == Windows.System.VirtualKey.Escape)
-        {
-            if (Frame.CanGoBack)
-                Frame.GoBack();
-        }
     }
 
     private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -35,26 +26,26 @@ public sealed partial class WorkersView : Page
 
     private void ModeRadio_Checked(object sender, RoutedEventArgs e)
     {
-        if(AddRadio.IsChecked == true)
+        if (AddRadio.IsChecked == true)
         {
             IdBox.IsEnabled = false;
             NameBox.IsEnabled = true;
             RoleIdBox.IsEnabled = true;
-            DepartmentIdBox.IsEnabled = true;
+            RoomNumberBox.IsEnabled = true;
         }
         else if (EditRadio.IsChecked == true)
         {
             IdBox.IsEnabled = true;
             NameBox.IsEnabled = true;
             RoleIdBox.IsEnabled = true;
-            DepartmentIdBox.IsEnabled = true;
+            RoomNumberBox.IsEnabled = true;
         }
         else if (DeleteRadio.IsChecked == true)
         {
             IdBox.IsEnabled = true;
             NameBox.IsEnabled = false;
             RoleIdBox.IsEnabled = false;
-            DepartmentIdBox.IsEnabled = false;
+            RoomNumberBox.IsEnabled = false;
         }
     }
 
@@ -62,11 +53,10 @@ public sealed partial class WorkersView : Page
     {
         if (_viewModel == null) return;
         int id = 0;
-        if(AddRadio.IsChecked != true)
+        if (AddRadio.IsChecked != true)
             id = int.TryParse(IdBox.Text, out var l) ? l : throw new ArgumentException("couldnt parse id");
         string name = NameBox.Text;
-        int? roleId = int.TryParse(RoleIdBox.Text, out var r) ? r : null;
-        int? departmentId = int.TryParse(DepartmentIdBox.Text, out var d) ? d : null;
+        int roleId = Convert.ToInt32(RoleIdBox.Text);
 
         try
         {
@@ -76,7 +66,7 @@ public sealed partial class WorkersView : Page
                 {
                     Name = name,
                     RoleId = roleId,
-                    DepartmentId = departmentId
+                    RoomNumber = RoomNumberBox.Text
                 });
             }
             else if (EditRadio.IsChecked == true)
@@ -86,7 +76,7 @@ public sealed partial class WorkersView : Page
                     Id = id,
                     Name = name,
                     RoleId = roleId,
-                    DepartmentId = departmentId
+                    RoomNumber = RoomNumberBox.Text
                 });
             }
             else if (DeleteRadio.IsChecked == true)
@@ -103,7 +93,13 @@ public sealed partial class WorkersView : Page
         IdBox.Text = "";
         NameBox.Text = "";
         RoleIdBox.Text = "";
-        DepartmentIdBox.Text = "";
+        RoomNumberBox.Text = "";
     }
 
+    // Обработчик события кнопки "Назад" из BasicDataLayout
+    private void BackButtonClicked(object sender, EventArgs e)
+    {
+        if (Frame.CanGoBack)
+            Frame.GoBack();
+    }
 }

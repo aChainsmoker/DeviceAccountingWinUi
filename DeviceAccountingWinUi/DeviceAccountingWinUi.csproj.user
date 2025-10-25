@@ -11,6 +11,9 @@
     <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="UserControls\BasicDataLayout.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\WorkerDevicesView.xaml">
       <SubType>Designer</SubType>
     </Page>

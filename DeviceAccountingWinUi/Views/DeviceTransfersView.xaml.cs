@@ -16,15 +16,12 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace DeviceAccountingWinUi.Views;
-
 
 public sealed partial class DeviceTransfersView : Page
 {
     private DeviceTransfersViewModel _viewModel = App.Services.GetRequiredService<DeviceTransfersViewModel>();
+
     public DeviceTransfersView()
     {
         InitializeComponent();
@@ -134,4 +131,10 @@ public sealed partial class DeviceTransfersView : Page
         ToWorkerIdBox.Text = "";
     }
 
+    // Обработчик события кнопки "Назад" из BasicDataLayout
+    private void MainLayout_BackButtonClicked(object sender, EventArgs e)
+    {
+        if (Frame.CanGoBack)
+            Frame.GoBack();
+    }
 }

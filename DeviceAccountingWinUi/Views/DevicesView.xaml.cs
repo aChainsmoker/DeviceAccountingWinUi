@@ -8,15 +8,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace DeviceAccountingWinUi.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class DevicesView : Page
     {
         private DevicesViewModel _viewModel = App.Services.GetRequiredService<DevicesViewModel>();
@@ -25,15 +18,6 @@ namespace DeviceAccountingWinUi.Views
         {
             InitializeComponent();
             this.DataContext = _viewModel;
-        }
-
-        private void Page_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Escape)
-            {
-                if (Frame.CanGoBack)
-                    Frame.GoBack();
-            }
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -53,7 +37,6 @@ namespace DeviceAccountingWinUi.Views
                 ModelBox.IsEnabled = false;
                 DateOfObtainingBox.IsEnabled = false;
                 CostBox.IsEnabled = false;
-                RoomNumberBox.IsEnabled = false;
                 WorkerIdBox.IsEnabled = false;
             }
             else
@@ -64,20 +47,17 @@ namespace DeviceAccountingWinUi.Views
                 ModelBox.IsEnabled = true;
                 DateOfObtainingBox.IsEnabled = true;
                 CostBox.IsEnabled = true;
-                RoomNumberBox.IsEnabled = true;
                 WorkerIdBox.IsEnabled = true;
             }
         }
 
         private async void ApplyEdit_Click(object sender, RoutedEventArgs e)
         {
-
             var inventoryId = InventoryIdBox.Text;
             var name = NameBox.Text;
             var model = ModelBox.Text;
-            var date = DateOfObtainingBox.Date; // DatePicker
+            var date = DateOfObtainingBox.Date;
             var costText = CostBox.Text;
-            var room = RoomNumberBox.Text;
             var workerIdText = WorkerIdBox.Text;
 
             if (!decimal.TryParse(costText, out var cost) && DeleteRadio.IsChecked == false)
@@ -95,9 +75,8 @@ namespace DeviceAccountingWinUi.Views
                 InventoryId = inventoryId,
                 Name = name,
                 Model = model,
-                DateOfObtaining = DateOnly.FromDateTime(date.Date), // конвертируем DateOnly в DateTime
+                DateOfObtaining = DateOnly.FromDateTime(date.Date),
                 Cost = cost,
-                RoomNumber = room,
                 WorkerId = workerId
             };
 
@@ -127,12 +106,14 @@ namespace DeviceAccountingWinUi.Views
             NameBox.Text = "";
             ModelBox.Text = "";
             CostBox.Text = "";
-            RoomNumberBox.Text = "";
             WorkerIdBox.Text = "";
         }
 
-
-        // Page2.xaml.cs
-
+        // Обработчик события из BasicDataLayout
+        private void BackButtonClicked(object sender, EventArgs e)
+        {
+            if (Frame.CanGoBack)
+                Frame.GoBack();
+        }
     }
 }

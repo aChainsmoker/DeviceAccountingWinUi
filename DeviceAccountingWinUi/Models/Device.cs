@@ -15,13 +15,9 @@ public partial class Device
 
     public decimal Cost { get; set; }
 
-    public string RoomNumber { get; set; } = null!;
-
     public int? WorkerId { get; set; }
 
     public virtual ICollection<DeviceTransfer> DeviceTransfers { get; set; } = new List<DeviceTransfer>();
-
-    public virtual Room RoomNumberNavigation { get; set; } = null!;
 
     public virtual Worker? Worker { get; set; }
 }

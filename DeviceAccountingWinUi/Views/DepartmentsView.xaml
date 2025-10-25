@@ -5,59 +5,67 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DeviceAccountingWinUi.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:layout="using:DeviceAccountingWinUi.UserControls"
     mc:Ignorable="d"
     KeyDown="Page_KeyDown">
 
-    <Grid Padding="10">
-        <controls:DataGrid 
-            x:Name="DepartmentDataGrid"
-            AutoGenerateColumns="False"
-            IsReadOnly="True"
-            ItemsSource="{Binding Departments}">
+    <layout:BasicDataLayout x:Name="MainLayout"
+                           BackButtonClicked="MainLayout_BackButtonClicked">
+        <layout:BasicDataLayout.CenterContent>
+            <controls:DataGrid 
+                x:Name="DepartmentDataGrid"
+                AutoGenerateColumns="False"
+                IsReadOnly="True"
+                ItemsSource="{Binding Departments}">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                    <controls:DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="*"/>
+                    <controls:DataGridTextColumn Header="Short Name" Binding="{Binding ShortName}" Width="Auto"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </layout:BasicDataLayout.CenterContent>
 
-            <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                <controls:DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="*"/>
-                <controls:DataGridTextColumn Header="Short Name" Binding="{Binding ShortName}" Width="Auto"/>
-            </controls:DataGrid.Columns>
-        </controls:DataGrid>
+        <layout:BasicDataLayout.RightContent>
+            <!-- Правая колонка: кнопка Редактировать и панель редактирования -->
+            <Grid>
+                <!-- Кнопка Редактировать -->
+                <Button Content="Редактировать"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="10"
+                        Width="120"
+                        Click="EditButton_Click"
+                        Canvas.ZIndex="3"/>
 
+                <!-- Панель редактирования -->
+                <StackPanel x:Name="EditPanel"
+                            Visibility="Collapsed"
+                            Background="Transparent"
+                            Padding="10"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Width="auto"
+                            Spacing="5">
 
-        <!-- Кнопка Редактировать -->
-        <Button Content="Редактировать"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="10"
-                Width="120"
-                Click="EditButton_Click"
-                Canvas.ZIndex="3"/>
+                    <!-- Радиокнопки режима -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <RadioButton x:Name="AddRadio" Content="Добавление" Checked="ModeRadio_Checked"/>
+                        <RadioButton x:Name="EditRadio" Content="Изменение" Checked="ModeRadio_Checked"/>
+                        <RadioButton x:Name="DeleteRadio" Content="Удаление" Checked="ModeRadio_Checked"/>
+                    </StackPanel>
 
-        <!-- Панель редактирования -->
-        <StackPanel x:Name="EditPanel"
-                    Visibility="Collapsed"
-                    Background="Transparent"
-                    Padding="10"
-                    Margin="0,0,0,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Width="auto"
-                    Spacing="5">
+                    <!-- Поля для данных -->
+                    <TextBox x:Name="IdBox" Header="ID"/>
+                    <TextBox x:Name="FullNameBox" Header="Full Name"/>
+                    <TextBox x:Name="ShortNameBox" Header="Short Name"/>
 
-            <!-- Радиокнопки режима -->
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <RadioButton x:Name="AddRadio" Content="Добавление" Checked="ModeRadio_Checked"/>
-                <RadioButton x:Name="EditRadio" Content="Изменение" Checked="ModeRadio_Checked"/>
-                <RadioButton x:Name="DeleteRadio" Content="Удаление" Checked="ModeRadio_Checked"/>
-            </StackPanel>
-
-            <!-- Поля для данных -->
-            <TextBox x:Name="IdBox" Header="ID"/>
-            <TextBox x:Name="FullNameBox" Header="Full Name"/>
-            <TextBox x:Name="ShortNameBox" Header="Short Name"/>
-
-            <!-- Кнопка Применить -->
-            <Button Content="Применить" Click="ApplyEdit_Click"/>
-        </StackPanel>
-    </Grid>
+                    <!-- Кнопка Применить -->
+                    <Button Content="Применить" Click="ApplyEdit_Click"/>
+                </StackPanel>
+            </Grid>
+        </layout:BasicDataLayout.RightContent>
+    </layout:BasicDataLayout>
 </Page>

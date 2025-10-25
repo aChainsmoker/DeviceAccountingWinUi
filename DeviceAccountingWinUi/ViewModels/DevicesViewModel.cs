@@ -52,7 +52,6 @@ namespace DeviceAccountingWinUi.ViewModels
                 existing.Model = device.Model;
                 existing.DateOfObtaining = device.DateOfObtaining;
                 existing.Cost = device.Cost;
-                existing.RoomNumber = device.RoomNumber;
                 existing.WorkerId = device.WorkerId;
 
                 await _context.SaveChangesAsync();

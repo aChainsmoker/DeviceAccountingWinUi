@@ -12,6 +12,4 @@ public partial class Department
     public string ShortName { get; set; } = null!;
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
-
-    public virtual ICollection<Worker> Workers { get; set; } = new List<Worker>();
 }

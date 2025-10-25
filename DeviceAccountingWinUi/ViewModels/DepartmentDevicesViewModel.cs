@@ -39,7 +39,8 @@ public partial class DepartmentDevicesViewModel : ObservableObject
         // Получаем подразделение с названием предприятия
         var department = await _context.Departments
             .Include(d => d.Rooms)
-            .ThenInclude(r => r.Devices)
+            .ThenInclude(r => r.Workers)
+            .ThenInclude(w => w.Devices)
             .FirstOrDefaultAsync(d => d.Id == departmentId);
 
         if (department == null)
@@ -56,7 +57,7 @@ public partial class DepartmentDevicesViewModel : ObservableObject
         CurrentTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
 
         // Получаем все устройства из всех комнат подразделения
-        var devicesList = department.Rooms
+        var devicesList = department.Rooms.SelectMany(w => w.Workers)
             .SelectMany(r => r.Devices)
             .Select(d => new Device
             {
