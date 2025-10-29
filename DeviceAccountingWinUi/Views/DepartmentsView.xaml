@@ -31,7 +31,7 @@
             <!-- Правая колонка: кнопка Редактировать и панель редактирования -->
             <Grid>
                 <!-- Кнопка Редактировать -->
-                <Button Content="Редактировать"
+                <Button Content="Edit"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Margin="10"
