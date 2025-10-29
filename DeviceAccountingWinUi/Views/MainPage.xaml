@@ -63,6 +63,14 @@
                 FontSize="30"
                 Height="60"
                 />
+                    <HyperlinkButton Content="Rooms" Name="btn7" Click="btn7_Click"
+            FontWeight="SemiBold"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            FontSize="30"
+            Height="60"
+            />
             <HyperlinkButton Content="Device Transfers" Name="btn3" Click="btn3_Click"
                 FontWeight="SemiBold"
                 HorizontalAlignment="Stretch"

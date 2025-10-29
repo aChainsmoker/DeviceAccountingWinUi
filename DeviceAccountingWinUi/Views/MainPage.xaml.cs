@@ -62,4 +62,9 @@ public sealed partial class MainPage : Page
     {
         Frame.Navigate(typeof(WorkerDevicesView));
     }
+
+    private void btn7_Click(object sender, RoutedEventArgs e)
+    {
+        Frame.Navigate(typeof(RoomsView));
+    }
 }
