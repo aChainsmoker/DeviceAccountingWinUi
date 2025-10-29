@@ -30,5 +30,12 @@ namespace DeviceAccountingWinUi.Views
                 await _viewModel.LoadWorkerDevicesAsync(workerId);
             }
         }
+
+        // Обработчик события кнопки "Назад" из BasicDataLayout
+        private void MainLayout_BackButtonClicked(object sender, EventArgs e)
+        {
+            if (Frame.CanGoBack)
+                Frame.GoBack();
+        }
     }
 }

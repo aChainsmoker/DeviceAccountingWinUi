@@ -8,35 +8,51 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:vm="using:DeviceAccountingWinUi.ViewModels"
+    xmlns:layout="using:DeviceAccountingWinUi.UserControls"
     mc:Ignorable="d"
     KeyDown="Page_KeyDown">
 
-    <Grid Padding="10" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*">
-        <!-- Верхняя информация -->
-        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-            <TextBlock Text="{Binding CompanyName}" FontWeight="Bold" FontSize="24"/>
-            <TextBlock Text="{Binding DepartmentName}" FontWeight="Bold" FontSize="18"/>
-            <TextBlock Text="{Binding CurrentTime}" FontSize="16"/>
-        </StackPanel>
+    <layout:BasicDataLayout x:Name="MainLayout"
+                           BackButtonClicked="MainLayout_BackButtonClicked">
+        <layout:BasicDataLayout.CenterContent>
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Верхняя информация -->
+                <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                    <TextBlock Text="{Binding CompanyName}" FontWeight="Bold" FontSize="24"/>
+                    <TextBlock Text="{Binding DepartmentName}" FontWeight="Bold" FontSize="18"/>
+                    <TextBlock Text="{Binding CurrentTime}" FontSize="16"/>
+                </StackPanel>
 
-        <!-- Таблица устройств -->
-        <controls:DataGrid x:Name="DepartmentDeviceDataGrid"
-                           Grid.Row="1"
-                           AutoGenerateColumns="False"
-                           IsReadOnly="True"
-                           ItemsSource="{Binding Devices}">
-            <controls:DataGrid.Columns>
-                <controls:DataGridTextColumn Header="Inventory ID" Binding="{Binding InventoryId}" Width="*"/>
-                <controls:DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                <controls:DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="*"/>
-            </controls:DataGrid.Columns>
-        </controls:DataGrid>
+                <!-- Таблица устройств -->
+                <controls:DataGrid x:Name="DepartmentDeviceDataGrid"
+                                   Grid.Row="1"
+                                   AutoGenerateColumns="False"
+                                   IsReadOnly="True"
+                                   ItemsSource="{Binding Devices}">
+                    <controls:DataGrid.Columns>
+                        <controls:DataGridTextColumn Header="Inventory ID" Binding="{Binding InventoryId}" Width="*"/>
+                        <controls:DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                        <controls:DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="*"/>
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>
+            </Grid>
+        </layout:BasicDataLayout.CenterContent>
 
-        <!-- Нижняя панель поиска -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10">
-            <TextBox x:Name="DepartmentIdBox" Header="Department ID" Width="150"/>
-            <Button Content="Найти" Click="SearchButton_Click" Margin="0,0,0,0" VerticalAlignment="Bottom"/>
-        </StackPanel>
-    </Grid>
+        <layout:BasicDataLayout.RightContent>
+            <!-- Правая колонка: панель поиска -->
+            <StackPanel Orientation="Vertical" 
+                        VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Right"
+                        Spacing="10"
+                        Margin="10,0,0,0">
+                <TextBox x:Name="DepartmentIdBox" 
+                         Header="Department ID" 
+                         Width="150"/>
+                <Button Content="Найти" 
+                        Click="SearchButton_Click" 
+                        Width="150"
+                        HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </layout:BasicDataLayout.RightContent>
+    </layout:BasicDataLayout>
 </Page>
-
