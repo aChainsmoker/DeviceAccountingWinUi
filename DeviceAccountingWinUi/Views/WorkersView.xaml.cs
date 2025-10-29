@@ -53,10 +53,12 @@ public sealed partial class WorkersView : Page
     {
         if (_viewModel == null) return;
         int id = 0;
-        if (AddRadio.IsChecked != true)
+        int roleId = 0;
+        if (AddRadio.IsChecked == false)
             id = int.TryParse(IdBox.Text, out var l) ? l : throw new ArgumentException("couldnt parse id");
         string name = NameBox.Text;
-        int roleId = Convert.ToInt32(RoleIdBox.Text);
+        if (DeleteRadio.IsChecked == false)
+            roleId = Convert.ToInt32(RoleIdBox.Text);
 
         try
         {

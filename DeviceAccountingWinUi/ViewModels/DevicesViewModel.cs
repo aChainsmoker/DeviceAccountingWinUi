@@ -1,15 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using DeviceAccountingWinUi.DatabaseControl;
 using DeviceAccountingWinUi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeviceAccountingWinUi.ViewModels
@@ -26,49 +20,60 @@ namespace DeviceAccountingWinUi.ViewModels
             LoadDevicesAsync();
         }
 
-
-        private void  LoadDevicesAsync()
+        private async void LoadDevicesAsync()
         {
             if (_context is null)
                 throw new InvalidOperationException("No Context was Passed");
-            var devicesFromDb = _context.Devices.ToList();
+            var devicesFromDb = await _context.Devices
+                .FromSqlRaw("SELECT * FROM \"Devices\"")
+                .AsNoTracking()
+                .ToListAsync();
+
             Devices = new ObservableCollection<Device>(devicesFromDb);
         }
 
         public async Task AddDeviceAsync(Device device)
         {
-            _context.Devices.Add(device);
-            await _context.SaveChangesAsync();
+            // Используем хранимую процедуру вместо _context.Devices.Add()
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL add_device({0}, {1}, {2}, {3}, {4}, {5})",
+                device.InventoryId,
+                device.Name,
+                device.Model,
+                device.DateOfObtaining,
+                device.Cost,
+                device.WorkerId
+            );
+
             LoadDevicesAsync();
         }
 
-        // Обновление
+        // Обновление через хранимую процедуру
         public async Task UpdateDeviceAsync(Device device)
         {
-            var existing = await _context.Devices.FindAsync(device.InventoryId);
-            if (existing != null)
-            {
-                existing.Name = device.Name;
-                existing.Model = device.Model;
-                existing.DateOfObtaining = device.DateOfObtaining;
-                existing.Cost = device.Cost;
-                existing.WorkerId = device.WorkerId;
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL update_device({0}, {1}, {2}, {3}, {4}, {5})",
+                device.InventoryId,
+                device.Name,
+                device.Model,
+                device.DateOfObtaining,
+                device.Cost,
+                device.WorkerId
+            );
 
-                await _context.SaveChangesAsync();
-                LoadDevicesAsync();
-            }
+            _context.ChangeTracker.Clear();
+            LoadDevicesAsync();
         }
 
-        // Удаление
+        // Удаление через хранимую процедуру
         public async Task DeleteDeviceAsync(string inventoryId)
         {
-            var existing = await _context.Devices.FindAsync(inventoryId);
-            if (existing != null)
-            {
-                _context.Devices.Remove(existing);
-                await _context.SaveChangesAsync();
-                LoadDevicesAsync();
-            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL delete_device({0})",
+                inventoryId
+            );
+
+            LoadDevicesAsync();
         }
     }
 }

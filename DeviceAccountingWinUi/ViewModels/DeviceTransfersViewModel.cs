@@ -1,11 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeviceAccountingWinUi.DatabaseControl;
 using DeviceAccountingWinUi.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeviceAccountingWinUi.ViewModels
@@ -22,45 +20,57 @@ namespace DeviceAccountingWinUi.ViewModels
             LoadDeviceTransfersAsync();
         }
 
-
-        private void LoadDeviceTransfersAsync()
+        private async void LoadDeviceTransfersAsync()
         {
             if (_context is null)
                 throw new InvalidOperationException("No Context was Passed");
-            var deviceTransfersFromDb = _context.DeviceTransfers.ToList();
+
+            var deviceTransfersFromDb = await _context.DeviceTransfers
+                .FromSqlRaw("SELECT * FROM \"DeviceTransfers\"")
+                .AsNoTracking()
+                .ToListAsync();
+
             DeviceTransfers = new ObservableCollection<DeviceTransfer>(deviceTransfersFromDb);
         }
 
         public async Task AddDeviceTransferAsync(DeviceTransfer transfer)
         {
-            _context.DeviceTransfers.Add(transfer);
-            await _context.SaveChangesAsync();
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL add_device_transfer({0}, {1}, {2}, {3})",
+                transfer.DeviceId,
+                transfer.DateOfTransfer,
+                transfer.FromWorkerId,
+                transfer.ToWorkerId
+            );
+
+            _context.ChangeTracker.Clear();
             LoadDeviceTransfersAsync();
         }
 
         public async Task UpdateDeviceTransferAsync(DeviceTransfer transfer)
         {
-            var existing = await _context.DeviceTransfers.FindAsync(transfer.Id);
-            if (existing != null)
-            {
-                existing.DeviceId = transfer.DeviceId;
-                existing.DateOfTransfer = transfer.DateOfTransfer;
-                existing.FromWorkerId = transfer.FromWorkerId;
-                existing.ToWorkerId = transfer.ToWorkerId;
-                await _context.SaveChangesAsync();
-                LoadDeviceTransfersAsync();
-            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL update_device_transfer({0}, {1}, {2}, {3})",
+                transfer.Id,
+                transfer.DateOfTransfer,
+                transfer.FromWorkerId,
+                transfer.ToWorkerId
+            );
+
+            _context.ChangeTracker.Clear();
+            LoadDeviceTransfersAsync();
         }
 
         public async Task DeleteDeviceTransferAsync(int id)
         {
-            var existing = await _context.DeviceTransfers.FindAsync(id);
-            if (existing != null)
-            {
-                _context.DeviceTransfers.Remove(existing);
-                await _context.SaveChangesAsync();
-                LoadDeviceTransfersAsync();
-            }
+            // Создадим процедуру удаления, если её нет
+            await _context.Database.ExecuteSqlRawAsync(
+                "DELETE FROM \"DeviceTransfers\" WHERE id = {0}",
+                id
+            );
+
+            _context.ChangeTracker.Clear();
+            LoadDeviceTransfersAsync();
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeviceAccountingWinUi.DatabaseControl;
 using DeviceAccountingWinUi.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeviceAccountingWinUi.ViewModels
@@ -22,45 +20,55 @@ namespace DeviceAccountingWinUi.ViewModels
             LoadWorkersAsync();
         }
 
-
-        private void LoadWorkersAsync()
+        private async void LoadWorkersAsync()
         {
             if (_context is null)
                 throw new InvalidOperationException("No Context was Passed");
-            var workersFromDb = _context.Workers.ToList();
+
+            var workersFromDb = await _context.Workers
+                .FromSqlRaw("SELECT * FROM \"Workers\"")
+                .AsNoTracking()
+                .ToListAsync();
+
             Workers = new ObservableCollection<Worker>(workersFromDb);
         }
 
-
         public async Task AddWorkerAsync(Worker worker)
         {
-            _context.Workers.Add(worker);
-            await _context.SaveChangesAsync();
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL add_worker({0}, {1}, {2})",
+                worker.Name,
+                worker.RoleId,
+                worker.RoomNumber
+            );
+
+            _context.ChangeTracker.Clear();
             LoadWorkersAsync();
         }
 
         public async Task UpdateWorkerAsync(Worker worker)
         {
-            var existing = await _context.Workers.FindAsync(worker.Id);
-            if (existing != null)
-            {
-                existing.Name = worker.Name;
-                existing.RoleId = worker.RoleId;
-                existing.RoomNumber = worker.RoomNumber;
-                await _context.SaveChangesAsync();
-                LoadWorkersAsync();
-            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL update_worker({0}, {1}, {2}, {3})",
+                worker.Id,
+                worker.Name,
+                worker.RoleId,
+                worker.RoomNumber
+            );
+
+            _context.ChangeTracker.Clear();
+            LoadWorkersAsync();
         }
 
         public async Task DeleteWorkerAsync(int id)
         {
-            var existing = await _context.Workers.FindAsync(id);
-            if (existing != null)
-            {
-                _context.Workers.Remove(existing);
-                await _context.SaveChangesAsync();
-                LoadWorkersAsync();
-            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "CALL delete_worker({0})",
+                id
+            );
+
+            _context.ChangeTracker.Clear();
+            LoadWorkersAsync();
         }
     }
 }
