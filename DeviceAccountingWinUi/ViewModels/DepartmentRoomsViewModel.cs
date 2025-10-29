@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeviceAccountingWinUi.DatabaseControl;
 using DeviceAccountingWinUi.Models;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,10 +35,11 @@ public partial class DepartmentRoomsViewModel : ObservableObject
 
     public async Task LoadDepartmentRoomsAsync(int departmentId)
     {
-        // Получаем подразделение с комнатами
+        // Получаем информацию о подразделении через Raw SQL
         var department = await _context.Departments
-            .Include(d => d.Rooms)
-            .FirstOrDefaultAsync(d => d.Id == departmentId);
+            .FromSqlRaw("SELECT * FROM \"Departments\" WHERE id = {0}", departmentId)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
 
         if (department == null)
         {
@@ -51,15 +54,45 @@ public partial class DepartmentRoomsViewModel : ObservableObject
         DepartmentName = department.FullName;
         CurrentTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
 
-        // Список комнат подразделения
-        var roomList = department.Rooms
-            .Select(r => new Room
-            {
-                Number = r.Number,
-                Area = r.Area
-            })
-            .ToList();
+        // Используем Dapper для вызова функции get_rooms_by_department
+        var roomsList = await GetRoomsByDepartmentAsync(departmentId);
+        Rooms = new ObservableCollection<Room>(roomsList);
+    }
 
-        Rooms = new ObservableCollection<Room>(roomList);
+    private async Task<System.Collections.Generic.List<Room>> GetRoomsByDepartmentAsync(int departmentId)
+    {
+        var connection = _context.Database.GetDbConnection();
+
+        if (connection.State != ConnectionState.Open)
+            await connection.OpenAsync();
+
+        try
+        {
+            // Используем Dapper для вызова функции get_rooms_by_department
+            var result = await connection.QueryAsync<RoomResult>(
+                "SELECT * FROM get_rooms_by_department(@DepartmentId)",
+                new { DepartmentId = departmentId }
+            );
+
+            // Преобразуем результат в коллекцию Room
+            return result.Select(r => new Room
+            {
+                Number = r.room_number,
+                Area = r.area
+            }).ToList();
+        }
+        finally
+        {
+            if (connection.State == ConnectionState.Open)
+                await connection.CloseAsync();
+        }
+    }
+
+    // Класс для маппинга результата функции get_rooms_by_department
+    private class RoomResult
+    {
+        public string department_name { get; set; } = "";
+        public string room_number { get; set; } = "";
+        public decimal area { get; set; }
     }
 }

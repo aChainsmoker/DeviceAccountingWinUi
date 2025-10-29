@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DeviceAccountingWinUi.DatabaseControl;
 using DeviceAccountingWinUi.Models;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeviceAccountingWinUi.ViewModels;
@@ -31,17 +31,15 @@ public partial class DepartmentDevicesViewModel : ObservableObject
     public DepartmentDevicesViewModel(OrganisationContext context)
     {
         _context = context;
-        
     }
 
     public async Task LoadDepartmentDevicesAsync(int departmentId)
     {
-        // Получаем подразделение с названием предприятия
+        // Получаем информацию о подразделении через Raw SQL (можно оставить через EF)
         var department = await _context.Departments
-            .Include(d => d.Rooms)
-            .ThenInclude(r => r.Workers)
-            .ThenInclude(w => w.Devices)
-            .FirstOrDefaultAsync(d => d.Id == departmentId);
+            .FromSqlRaw("SELECT * FROM \"Departments\" WHERE id = {0}", departmentId)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
 
         if (department == null)
         {
@@ -56,17 +54,50 @@ public partial class DepartmentDevicesViewModel : ObservableObject
         DepartmentName = department.FullName;
         CurrentTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
 
-        // Получаем все устройства из всех комнат подразделения
-        var devicesList = department.Rooms.SelectMany(w => w.Workers)
-            .SelectMany(r => r.Devices)
-            .Select(d => new Device
-            {
-                InventoryId = d.InventoryId,
-                Name = d.Name,
-                Model = d.Model
-            })
-            .ToList();
-
+        // Используем Dapper для вызова функции
+        var devicesList = await GetDevicesByDepartmentAsync(departmentId);
         Devices = new ObservableCollection<Device>(devicesList);
+    }
+
+    private async Task<System.Collections.Generic.List<Device>> GetDevicesByDepartmentAsync(int departmentId)
+    {
+        // Получаем connection string из контекста
+        var connection = _context.Database.GetDbConnection();
+
+        // Убедимся, что соединение открыто
+        if (connection.State != ConnectionState.Open)
+            await connection.OpenAsync();
+
+        try
+        {
+            // Используем Dapper для вызова функции
+            var result = await connection.QueryAsync<DeviceResult>(
+                "SELECT * FROM get_devices_by_department(@DepartmentId)",
+                new { DepartmentId = departmentId }
+            );
+
+            // Преобразуем результат
+            return result.Select(d => new Device
+            {
+                InventoryId = d.inventory_id,
+                Name = d.device_name,
+                Model = d.model
+            }).ToList();
+        }
+        finally
+        {
+            // Закрываем соединение, если оно было открыто нами
+            if (connection.State == ConnectionState.Open)
+                await connection.CloseAsync();
+        }
+    }
+
+    // Класс для маппинга результата функции
+    private class DeviceResult
+    {
+        public string department_name { get; set; } = "";
+        public string inventory_id { get; set; } = "";
+        public string device_name { get; set; } = "";
+        public string model { get; set; } = "";
     }
 }
