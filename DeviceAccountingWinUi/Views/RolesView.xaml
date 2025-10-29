@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DeviceAccountingWinUi.Views.RolesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DeviceAccountingWinUi.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:vm="using:DeviceAccountingWinUi.ViewModels" 
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:layout="using:DeviceAccountingWinUi.UserControls"
+    mc:Ignorable="d">
+
+    <layout:BasicDataLayout x:Name="MainLayout"
+                           BackButtonClicked="BackButtonClicked">
+        <layout:BasicDataLayout.CenterContent>
+            <!-- Средняя колонка: таблица -->
+            <controls:DataGrid x:Name="RoleDataGrid"
+                               AutoGenerateColumns="False"
+                               IsReadOnly="True"
+                               ItemsSource="{Binding Roles}"
+                               Margin="0,0,10,0">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                    <controls:DataGridTextColumn Header="Role Name" Binding="{Binding Name}" Width="*"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </layout:BasicDataLayout.CenterContent>
+
+        <layout:BasicDataLayout.RightContent>
+            <!-- Правая колонка: кнопка Edit и панель редактирования -->
+            <Grid>
+                <!-- Панель для редактирования -->
+                <StackPanel x:Name="EditPanel" 
+                          Visibility="Collapsed" 
+                          Background="Transparent" 
+                          Padding="10" 
+                          Margin="0,0,0,0" 
+                          HorizontalAlignment="Right" 
+                          VerticalAlignment="Bottom" 
+                          Width="auto" 
+                          Spacing="5">
+                    <!-- Радиокнопки режима -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <RadioButton x:Name="AddRadio" Content="Добавление" Checked="ModeRadio_Checked"/>
+                        <RadioButton x:Name="EditRadio" Content="Изменение" Checked="ModeRadio_Checked"/>
+                        <RadioButton x:Name="DeleteRadio" Content="Удаление" Checked="ModeRadio_Checked"/>
+                    </StackPanel>
+                    <!-- Поля для данных -->
+                    <NumberBox x:Name="IdBox" 
+                               Header="ID"
+                               Minimum="0"
+                               SpinButtonPlacementMode="Inline"
+                               IsEnabled="False"/>
+                    <TextBox x:Name="NameBox" Header="Role Name"/>
+                    <!-- Кнопка применения -->
+                    <Button Content="Применить" Click="ApplyEdit_Click" Width="120"/>
+                </StackPanel>
+
+                <Button Content="Edit" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Bottom" 
+                        Margin="10" 
+                        Width="120" 
+                        Click="EditButton_Click" 
+                        Canvas.ZIndex="3"/>
+            </Grid>
+        </layout:BasicDataLayout.RightContent>
+    </layout:BasicDataLayout>
+</Page>

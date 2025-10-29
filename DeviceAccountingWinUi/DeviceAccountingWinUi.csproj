@@ -20,6 +20,7 @@
     <None Remove="Views\DevicesView.xaml" />
     <None Remove="Views\DeviceTransfersView.xaml" />
     <None Remove="Views\MainPage.xaml" />
+    <None Remove="Views\RolesView.xaml" />
     <None Remove="Views\RoomsView.xaml" />
     <None Remove="Views\WorkerDevicesView.xaml" />
     <None Remove="Views\WorkersView.xaml" />
@@ -62,6 +63,11 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="System.Text.Json" Version="9.0.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\RolesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\RoomsView.xaml">

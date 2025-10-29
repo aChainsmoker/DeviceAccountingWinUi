@@ -58,6 +58,7 @@ namespace DeviceAccountingWinUi
             services.AddScoped<DepartmentRoomsViewModel>();
             services.AddScoped<WorkerDevicesViewModel>();
             services.AddScoped<RoomsViewModel>();
+            services.AddTransient<RolesViewModel>();
 
             Services = services.BuildServiceProvider();
         } 

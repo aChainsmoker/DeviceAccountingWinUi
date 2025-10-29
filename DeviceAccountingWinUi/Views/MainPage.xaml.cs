@@ -67,4 +67,9 @@ public sealed partial class MainPage : Page
     {
         Frame.Navigate(typeof(RoomsView));
     }
+
+    private void btn8_Click(object sender, RoutedEventArgs e)
+    {
+        Frame.Navigate(typeof(RolesView));
+    }
 }
