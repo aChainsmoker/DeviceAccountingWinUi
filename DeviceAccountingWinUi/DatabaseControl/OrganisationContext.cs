@@ -57,19 +57,12 @@ public partial class OrganisationContext : DbContext
             entity.Property(e => e.Cost)
                 .HasPrecision(10, 2)
                 .HasColumnName("cost");
-            entity.Property(e => e.DateOfObtaining).HasColumnName("date_of_obtaining");
             entity.Property(e => e.Model)
                 .HasMaxLength(255)
                 .HasColumnName("model");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-            entity.Property(e => e.WorkerId).HasColumnName("worker_id");
-
-            entity.HasOne(d => d.Worker).WithMany(p => p.Devices)
-                .HasForeignKey(d => d.WorkerId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("Devices_worker_id_fkey");
         });
 
         modelBuilder.Entity<DeviceTransfer>(entity =>
@@ -91,7 +84,6 @@ public partial class OrganisationContext : DbContext
 
             entity.HasOne(d => d.FromWorker).WithMany(p => p.DeviceTransferFromWorkers)
                 .HasForeignKey(d => d.FromWorkerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("DeviceTransfers_from_worker_id_fkey");
 
             entity.HasOne(d => d.ToWorker).WithMany(p => p.DeviceTransferToWorkers)

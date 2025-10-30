@@ -17,8 +17,6 @@ public partial class Worker
 
     public virtual ICollection<DeviceTransfer> DeviceTransferToWorkers { get; set; } = new List<DeviceTransfer>();
 
-    public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
-
     public virtual Role Role { get; set; } = null!;
 
     public virtual Room RoomNumberNavigation { get; set; } = null!;

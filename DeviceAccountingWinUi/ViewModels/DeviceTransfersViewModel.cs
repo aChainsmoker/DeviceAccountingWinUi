@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using DeviceAccountingWinUi.DatabaseControl;
 using DeviceAccountingWinUi.Models;
+using DeviceAccountingWinUi.ViewModels.Messaging;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
@@ -17,6 +19,15 @@ namespace DeviceAccountingWinUi.ViewModels
         public DeviceTransfersViewModel(OrganisationContext context)
         {
             this._context = context;
+
+
+            // Подписываемся на сообщения об изменении устройств
+            WeakReferenceMessenger.Default.Register<DeviceChangedMessage>(this, (recipient, message) =>
+            {
+                // При получении сообщения обновляем трансферы
+                LoadDeviceTransfersAsync();
+            });
+
             LoadDeviceTransfersAsync();
         }
 

@@ -75,20 +75,18 @@ namespace DeviceAccountingWinUi.Views
                 InventoryId = inventoryId,
                 Name = name,
                 Model = model,
-                DateOfObtaining = DateOnly.FromDateTime(date.Date),
-                Cost = cost,
-                WorkerId = workerId
+                Cost = cost
             };
 
             try
             {
                 if (AddRadio.IsChecked == true)
                 {
-                    await _viewModel.AddDeviceAsync(device);
+                    await _viewModel.AddDeviceAsync(device, DateOnly.FromDateTime(date.Date), workerId);
                 }
                 else if (EditRadio.IsChecked == true)
                 {
-                    await _viewModel.UpdateDeviceAsync(device);
+                    await _viewModel.UpdateDeviceAsync(device, DateOnly.FromDateTime(date.Date), workerId);
                 }
                 else if (DeleteRadio.IsChecked == true)
                 {
