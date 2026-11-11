@@ -27,6 +27,10 @@ bld/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+.vs/
+
+# Local database configuration (copy appsettings.example.json to appsettings.json)
+DeviceAccountingWinUi/appsettings.json
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt

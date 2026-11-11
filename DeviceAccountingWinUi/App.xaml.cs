@@ -2,6 +2,8 @@
 using DeviceAccountingWinUi.ViewModels;
 using DeviceAccountingWinUi.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -46,9 +48,15 @@ namespace DeviceAccountingWinUi
         private void ConfigureServices()
         {
             var services = new ServiceCollection();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .Build();
 
-            // 📌 Регистрируем DbContext
-            services.AddDbContext<OrganisationContext>();
+            var connectionString = configuration.GetConnectionString("OrganisationDb");
+
+            services.AddDbContext<OrganisationContext>(options =>
+                options.UseNpgsql(connectionString));
             services.AddScoped<DevicesViewModel>();
             services.AddScoped<WorkersViewModel>();
             services.AddScoped<DepartmentsViewModel>();
